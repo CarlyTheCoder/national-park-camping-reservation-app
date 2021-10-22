@@ -16,10 +16,7 @@ public class JdbcParkDao implements ParkDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
-    public List<Park> getAllParks() {
-        return new ArrayList<>();
-    }
+
 
     private Park mapRowToPark(SqlRowSet results) {
         Park park = new Park();
@@ -32,5 +29,16 @@ public class JdbcParkDao implements ParkDao {
         park.setDescription(results.getString("description"));
         return park;
     }
+    @Override
+    public List<Park> getAllParks() {
+        List<Park> parkList = new ArrayList<Park>();
+        String sql = "SELECT * FROM park ORDER BY location;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql);
+        while(results.next()) {
+            parkList.add(mapRowToPark(results));
+        }
+        return parkList;
+    }
+
 
 }
